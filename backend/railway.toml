@@ -1,0 +1,13 @@
+
+# Railway.app Configuration
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "node server.js"
+healthcheckPath = "/"
+healthcheckTimeout = 100
+
+[[services]]
+name = "jakarta-secure-backend"
+internalPort = 3001
