@@ -6,6 +6,8 @@ import { MapPin, Smartphone, User, AlertTriangle, CheckCircle } from 'lucide-rea
 import ExportData from '../components/ExportData';
 import SecurityAnalysis from '../components/SecurityAnalysis';
 
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+
 const DeviceTracker = () => {
     const { token } = useAuth();
     const [phone, setPhone] = useState('');
@@ -22,19 +24,19 @@ const DeviceTracker = () => {
 
         try {
             // Track device by phone
-            const phoneRes = await axios.post('http://localhost:3001/api/tools/track', { phone }, {
+            const phoneRes = await axios.post(`${API_URL}?action=track_device`, { phone }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
             // Also get phone analysis for more data
-            const phoneAnalysis = await axios.post('http://localhost:3001/api/tools/phone', { phone }, {
+            const phoneAnalysis = await axios.post(`${API_URL}?action=analyze_phone`, { phone }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
             // If NIK provided, analyze it too
             let nikData = null;
             if (nik) {
-                const nikRes = await axios.post('http://localhost:3001/api/tools/nik', { nik }, {
+                const nikRes = await axios.post(`${API_URL}?action=analyze_nik`, { nik }, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 nikData = nikRes.data;

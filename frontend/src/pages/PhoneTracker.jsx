@@ -5,6 +5,8 @@ import { useAuth } from '../context/AuthContext';
 import { Smartphone, MapPin, Shield, AlertTriangle } from 'lucide-react';
 import ExportData from '../components/ExportData';
 
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+
 const PhoneTracker = () => {
     const { token } = useAuth();
     const [phone, setPhone] = useState('');
@@ -15,7 +17,7 @@ const PhoneTracker = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await axios.post('http://localhost:3001/api/tools/phone', { phone }, {
+            const res = await axios.post(`${API_URL}?action=analyze_phone`, { phone }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setResults(res.data);

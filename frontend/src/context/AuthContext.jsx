@@ -4,6 +4,9 @@ import axios from 'axios';
 
 const AuthContext = createContext();
 
+// API URL - uses relative path for Vercel unified deployment
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(localStorage.getItem('token'));
@@ -11,19 +14,22 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         if (token) {
-            // ideally verify token with backend, for now decode or assume valid
-            setUser({ username: localStorage.getItem('username') });
+            setUser({
+                username: localStorage.getItem('username'),
+                role: localStorage.getItem('role')
+            });
         }
         setLoading(false);
     }, []);
 
     const login = async (username, password) => {
         try {
-            const res = await axios.post('http://localhost:3001/api/auth/login', { username, password });
+            const res = await axios.post(`${API_URL}?action=login`, { username, password });
             setToken(res.data.token);
-            setUser({ username: res.data.username });
+            setUser({ username: res.data.username, role: res.data.role });
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('username', res.data.username);
+            localStorage.setItem('role', res.data.role);
             return { success: true };
         } catch (error) {
             return { success: false, error: error.response?.data?.error || 'Login failed' };
@@ -32,7 +38,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (username, password, role) => {
         try {
-            await axios.post('http://localhost:3001/api/auth/register', { username, password, role });
+            await axios.post(`${API_URL}?action=register`, { username, password, role });
             return { success: true };
         } catch (error) {
             return { success: false, error: error.response?.data?.error || 'Registration failed' };
@@ -44,6 +50,7 @@ export const AuthProvider = ({ children }) => {
         setToken(null);
         localStorage.removeItem('token');
         localStorage.removeItem('username');
+        localStorage.removeItem('role');
     };
 
     return (

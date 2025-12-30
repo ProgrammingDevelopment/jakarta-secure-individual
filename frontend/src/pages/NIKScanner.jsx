@@ -5,6 +5,8 @@ import { useAuth } from '../context/AuthContext';
 import { FileText, MapPin, User, Calendar, CheckCircle, XCircle } from 'lucide-react';
 import ExportData from '../components/ExportData';
 
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+
 const NIKScanner = () => {
     const { token } = useAuth();
     const [nik, setNik] = useState('');
@@ -15,7 +17,7 @@ const NIKScanner = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await axios.post('http://localhost:3001/api/tools/nik', { nik }, {
+            const res = await axios.post(`${API_URL}?action=analyze_nik`, { nik }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setResults(res.data);
