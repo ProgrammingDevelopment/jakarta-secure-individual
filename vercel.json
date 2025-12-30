@@ -10,7 +10,7 @@
         },
         {
             "source": "/(.*)",
-            "destination": "/frontend/dist/$1"
+            "destination": "/$1"
         }
     ],
     "functions": {
@@ -18,9 +18,5 @@
             "memory": 1024,
             "maxDuration": 30
         }
-    },
-    "env": {
-        "MONGO_URI": "@mongo_uri",
-        "JWT_SECRET": "@jwt_secret"
     }
 }
